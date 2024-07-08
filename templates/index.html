@@ -1,0 +1,238 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container" id="app-ui">
+  <div class="sidebar">
+    <h2 style="color: inherit">Chat History</h2>
+    <ul id="chat-history">
+      {% for chat in chat_history %}
+      <li>User: {{ chat.user }}<br />Bot: {{ chat.bot }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="chatbox">
+    <h2 style="color: inherit">Chat</h2>
+    <div id="messages">
+      {% for chat in chat_history %}
+      <p class="user-message" id="prompt">
+        <strong>User:</strong> {{ chat.user }}
+      </p>
+      <p class="bot-response" id="response">
+        <strong>Bot:</strong> {{ chat.bot }}
+      </p>
+      {% endfor %}
+    </div>
+    <form id="chat-form">
+      <input
+        type="text"
+        id="message"
+        name="message"
+        placeholder="Type your message..."
+      />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <div
+    style="
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+    "
+    class="position-fixed top-0 end-0 mb-3 me-3"
+  >
+    <!--Login/Sign-up-->
+    <div class="position-relative top-0">
+      <button
+        class="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        style="color: inherit; margin-top: 10px"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1.3em"
+          height="1.3em"
+          fill="currentColor"
+          class="bi bi-person-circle"
+          viewBox="0 0 16 16"
+        >
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+          <path
+            fill-rule="evenodd"
+            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+          />
+        </svg>
+      </button>
+    </div>
+    <!--Theme button-->
+    <div class="dropdown bd-mode-toggle" style="margin-top: 10px">
+      <button
+        class="btn py-2 d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        aria-label="Toggle theme (auto)"
+        style="color: inherit"
+      >
+        <!--dropdown-toggle-->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20px"
+          height="20px"
+          fill="currentColor"
+          class="bi bi-palette"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"
+          />
+          <path
+            d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"
+          />
+        </svg>
+
+        <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+      </button>
+      <ul
+        class="dropdown-menu dropdown-menu-end shadow"
+        aria-labelledby="bd-theme-text"
+      >
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="light"
+            aria-pressed="false"
+            id="lt"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20px"
+              height="20px"
+              fill="currentColor"
+              class="bi bi-brightness-high-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"
+              />
+            </svg>
+            <span style="margin: 5px">Light</span>
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="dark"
+            aria-pressed="false"
+            id="dt"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              class="bi bi-moon-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"
+              />
+            </svg>
+            <span style="margin: 5px">Dark</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("chat-form")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      const message = document.getElementById("message").value;
+      if (message.trim() == "") {
+        alert(
+          "Prompt cannot be empty. Please enter a prompt to generate a response."
+        );
+      } else {
+        fetch("/send_message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `message=${message}`,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const chatHistory = document.getElementById("chat-history");
+            chatHistory.innerHTML = "";
+            data.chat_history.forEach((chat) => {
+              const listItem = document.createElement("li");
+              listItem.innerHTML = `User: ${chat.user}<br>Bot: ${chat.bot}`;
+              chatHistory.appendChild(listItem);
+            });
+
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = "";
+            data.chat_history.forEach((chat) => {
+              const userMessage = document.createElement("p");
+              userMessage.classList.add("user-message");
+              userMessage.innerHTML = `<strong>User:</strong> ${chat.user}`;
+              const botResponse = document.createElement("p");
+              botResponse.classList.add("bot-response");
+              botResponse.innerHTML = `<strong>Bot:</strong> ${chat.bot}`;
+              messagesDiv.appendChild(userMessage);
+              messagesDiv.appendChild(botResponse);
+            });
+
+            document.getElementById("message").value = "";
+          });
+      }
+    });
+
+  function SetDarkTheme() {
+    var body = document.body;
+    body.classList.remove("text-bg-light");
+    body.classList.add("text-bg-dark");
+    var ui = document.getElementById("app-ui");
+    ui.classList.remove("text-bg-light");
+    ui.classList.add("text-bg-dark");
+
+    // Store the theme preference in Local Storage
+    localStorage.setItem("theme", "dark");
+  }
+
+  function SetLightTheme() {
+    var body = document.body;
+    body.classList.add("text-bg-light");
+    body.classList.remove("text-bg-dark");
+    var ui = document.getElementById("app-ui");
+    ui.classList.add("text-bg-light");
+    ui.classList.remove("text-bg-dark");
+    // Store the theme preference in Local Storage
+    localStorage.setItem("theme", "light");
+  }
+
+  function applyThemePreference() {
+    var themePreference = localStorage.getItem("theme");
+    if (themePreference === "light") {
+      SetLightTheme();
+    } else {
+      SetDarkTheme();
+    }
+  }
+
+  // Add event listeners to the buttons
+  document.getElementById("lt").addEventListener("click", SetLightTheme);
+  document.getElementById("dt").addEventListener("click", SetDarkTheme);
+
+  // Call applyThemePreference on page load
+  applyThemePreference();
+</script>
+
+{% endblock %}
