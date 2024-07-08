@@ -8,7 +8,11 @@ chat_history = []
 
 @app.route('/')
 def index():
-    return render_template('index.html', chat_history=chat_history)
+    return render_template('index.html') 
+
+@app.route('/chatbot.html') 
+def chatbot():
+    return render_template('chatbot.html' , chat_history = chat_history) 
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
