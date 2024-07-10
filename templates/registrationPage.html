@@ -46,23 +46,44 @@
         >
           <input
             class="form-control"
-            style="height: 50px; width: 350px"
+            style="height: 50px; width: 360px"
+            type="text"
+            placeholder="Username"
+            id="username"
+          />
+          <div style="display: flex; flex-direction: row; column-gap: 10px">
+            <input
+              class="form-control"
+              type="text"
+              placeholder="First Name"
+              style="height: 50px; width: 175px"
+              id="fname"
+            />
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Last Name"
+              style="height: 50px; width: 175px"
+              id="lname"
+            />
+          </div>
+          <input
+            class="form-control"
+            style="height: 50px; width: 360px"
             type="email"
             placeholder="Email ID"
             id="signUpEmail"
           />
           <input
             class="form-control"
-            style="height: 50px; width: 350px"
+            style="height: 50px; width: 360px"
             type="password"
             placeholder="Password"
             id="signUpPass"
           />
           <input class="btn btn-primary" type="submit" value="Sign up" />
         </form>
-        <span
-          >Already have an account? <a href="./loginPage.html">Login</a></span
-        >
+        <span>Already have an account? <a href="./index.html">Login</a></span>
       </div>
 
       <div
@@ -191,6 +212,44 @@
 
       // Call applyThemePreference on page load
       applyThemePreference();
+    </script>
+    <script>
+      const signUpForm = document.getElementById("signUpForm");
+
+      signUpForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const fname = document.getElementById("fname").value;
+        const lname = document.getElementById("lname").value;
+        const regEmail = document.getElementById("signUpEmail").value;
+        const regPass = document.getElementById("signUpPass").value;
+
+        if (regEmail.trim() == "" || regPass.trim() == "") {
+        } else {
+          fetch("/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `username=${username}&fname=${fname}&lname=${lname}&email=${regEmail}&pass=${regPass}`,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                const errorText = response.text(); // Get error message from response body
+                console.error("Error:", errorText);
+                alert(
+                  "Signup failed. Please check your details and try again."
+                );
+                return;
+              }
+              const data = response.json();
+              console.log("Success:", data.message);
+              alert("Signup successful!");
+            })
+            .catch((error) => {
+              console.log(error);
+              alert("An unexpected error occurred. Please try again later.");
+            });
+        }
+      });
     </script>
   </body>
 </html>

@@ -29,25 +29,42 @@
         row-gap: 15px;
         text-align: center;
       "
-      action="index.html"
+      action="chatbot.html"
+      id="loginForm"
     >
+      <input
+        class="form-control"
+        style="height: 50px; width: 350px"
+        type="text"
+        placeholder="Username"
+        id="username"
+      />
       <input
         class="form-control"
         style="height: 50px; width: 350px"
         type="email"
         placeholder="Email ID"
+        id="email"
       />
+
       <input
         class="form-control"
         style="height: 50px; width: 350px"
         type="password"
         placeholder="Password"
+        id="password"
       />
-      <input class="btn btn-primary" type="submit" value="Login" />
+      <input
+        class="btn btn-primary"
+        type="submit"
+        value="Login"
+        style="height: 50px; width: 350px"
+        id="loginBtn"
+      />
     </form>
     <span
       >Not Registered?
-      <a href="./registrationPage.html">Create an account</a></span
+      <a href="registrationPage.html">Create an account</a></span
     >
     <span><a href="./forgotPasswordPage.html">Forgot Password</a></span>
   </div>
@@ -176,5 +193,24 @@
 
   // Call applyThemePreference on page load
   applyThemePreference();
+</script>
+<script>
+  //to login-in user!
+  const loginForm = document.getElementById("loginForm");
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if (username.trim() == "" || email.trim() == "" || password.trim() == "") {
+    } else {
+      fetch("/login", {
+        method: "GET",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `username=${username}&email=${email}&password=${password}`,
+      });
+    }
+  });
 </script>
 {% endblock %}
