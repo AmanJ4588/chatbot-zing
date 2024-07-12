@@ -1,9 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-import firebase_admin
+import firebase_admin 
 from firebase_admin import credentials
-from firebase_admin import auth
+from firebase_admin import auth  
 from firebase_admin import firestore
 
+
+def verify_user(id_token):
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        uid = decoded_token['uid']
+        return uid
+    except auth.InvalidIdTokenError:
+        return None
 
 
 app = Flask(__name__)
@@ -60,32 +68,14 @@ def signup():
     except Exception as e:  # Catch any other unexpected errors
         return jsonify({'error': 'An unexpected error occurred: ' + str(e)}), 500
 
-
-@app.route('/login' , methods=['GET'])  
-def login(): 
-    try: 
-        username = request.form['username'] 
-        email = request.form['email'] 
-        password = request.form['password']
-
-        user = auth.sign_in_with_email_and_password(email , password) ; 
-        db = firestore.client() ; 
-        if (user) :
-            doc_ref = db.collection('users').document(username)
-            doc = doc_ref.get() ; 
-        
-            if doc.exists:  
-                return jsonify({'message': 'Signed in successfully!'}), 200
-            else : 
-                return jsonify({'message': 'Invalid login credentials'}), 401
-                
-        else: 
-            return jsonify({'message': 'Invalid login credentials'}), 401 
-    except firebase_admin.exceptions.FirebaseAuthError as e: 
-        error_code = e.error_code
-        error_message = e.message   
-
-    
+@app.route('/verify_token', methods=['POST'])
+def verify_token():
+    id_token = request.form['id_token']
+    uid = verify_user(id_token)
+    if uid:
+        return jsonify({"status": "success", "uid": uid}), 200
+    else:
+        return jsonify({"status": "error", "message": "Invalid token"}), 401
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
